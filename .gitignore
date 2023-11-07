@@ -24,3 +24,6 @@ signal_wire-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Ignore secrets from user
+.env
