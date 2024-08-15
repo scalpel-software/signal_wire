@@ -10,7 +10,7 @@ by adding `signal_wire` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:signal_wire, "~> 0.1.0"}
+    {:signal_wire, "~> 0.1.1"}
   ]
 end
 ```

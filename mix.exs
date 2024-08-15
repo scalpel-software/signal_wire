@@ -2,7 +2,7 @@ defmodule SignalWire.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/scalpel-software/signal_wire"
-  @version "0.1.0"
+  @version "0.1.1"
 
   def project do
     [
@@ -26,7 +26,7 @@ defmodule SignalWire.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tesla, "~> 1.8.0"},
+      {:tesla, "~> 1.12"},
       {:jason, "~> 1.4"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
