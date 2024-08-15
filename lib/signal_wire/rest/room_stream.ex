@@ -29,9 +29,8 @@ defmodule SignalWire.RoomStream do
   @spec create(Tesla.Client.t(), binary, map) :: SignalWire.success() | SignalWire.error()
   def create(client, id, params) do 
     case Tesla.post!(client, build_url(@url, [id: id]), params) do 
-      %Tesla.Env{body: body, status: 201} -> 
-        {:ok, as_struct(SignalWire.Stream, body)}
-
+      %Tesla.Env{body: body, status: 200} -> {:ok, as_struct(SignalWire.Stream, body)}
+      %Tesla.Env{body: body, status: 201} -> {:ok, as_struct(SignalWire.Stream, body)}
       response -> {:error, response}
     end
   end

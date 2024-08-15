@@ -71,13 +71,11 @@ defmodule SignalWire.Utils do
   defp to_query_string(list) do
     list
     |> Enum.flat_map(fn
-      {key, value} when is_list(value) -> Enum.map(value, &{camelize(key), &1})
-      {key, value} -> [{camelize(key), value}]
+      {key, value} when is_list(value) -> Enum.map(value, &{to_string(key), &1})
+      {key, value} -> [{to_string(key), value}]
     end)
     |> URI.encode_query()
   end
-
-  defp camelize(name), do: name |> to_string |> Macro.camelize()
 
   defp from_query_string(path) when is_binary(path) do 
     path

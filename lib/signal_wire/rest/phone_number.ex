@@ -47,7 +47,7 @@ defmodule SignalWire.PhoneNumber do
   def search(client, query) do 
     case Tesla.get!(client, build_url(@url <> "/search", [], query)) do
       %Tesla.Env{body: %{"data" => data, "links" => links}, status: 200} -> 
-        {:ok, as_struct(__MODULE__, data), rest_paging(links)}
+        {:ok, as_struct(SignalWire.AvailablePhoneNumber, data), rest_paging(links)}
 
       response -> 
         {:error, response}
@@ -85,6 +85,7 @@ defmodule SignalWire.PhoneNumber do
   @spec create(Tesla.Client.t(), map) :: SignalWire.success() | SignalWire.error()
   def create(client, params) do 
     case Tesla.post!(client, @url, params) do 
+      %Tesla.Env{body: body, status: 200} -> {:ok, as_struct(__MODULE__, body)}
       %Tesla.Env{body: body, status: 201} -> {:ok, as_struct(__MODULE__, body)}
       response -> {:error, response}
     end

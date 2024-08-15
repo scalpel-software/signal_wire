@@ -72,6 +72,7 @@ defmodule SignalWire.Campaign do
   @spec create(Tesla.Client.t(), binary, map) :: SignalWire.success() | SignalWire.error()
   def create(client, brand_id, params) do 
     case Tesla.post!(client, build_url(@list_url, [brand_id: brand_id]), params) do 
+      %Tesla.Env{body: body, status: 200} -> {:ok, as_struct(__MODULE__, body)}
       %Tesla.Env{body: body, status: 201} -> {:ok, as_struct(__MODULE__, body)}
       response -> {:error, response}
     end

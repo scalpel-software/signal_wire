@@ -13,29 +13,23 @@ defmodule SignalWire.RequestValidator do
   and handling check with and without the url's port
   """
 
-  import Bitwise
-
-  def valid?(url, params, signature) do
-    valid?(url, params, signature, SignalWire.Config.resolve(:auth_token))
+  def valid?(url, params, signature, signing_key) do
+    check_validity(url, params, signature, signing_key) ||
+    check_validity(add_port(url), params, signature, signing_key) ||
+    check_validity(remove_port(url), params, signature, signing_key)
   end
 
-  def valid?(url, params, signature, auth_token) do
-    check_validity(url, params, signature, auth_token) ||
-    check_validity(add_port(url), params, signature, auth_token) ||
-    check_validity(remove_port(url), params, signature, auth_token)
-  end
-
-  def check_validity(url, params, signature, auth_token) do 
+  def check_validity(url, params, signature, signing_key) do 
     url
     |> data_for(params)
-    |> compute_hmac(auth_token)
+    |> compute_hmac(signing_key)
     |> Base.encode64()
     |> String.trim()
     |> secure_compare(signature)
   end
 
   defp add_port(url) do
-    case URI.parse(url) do 
+    case URI.parse(url) do
       uri = %URI{scheme: scheme} when scheme in ["http", "https"] -> 
         scheme <> ":" <>  URI.to_string(Map.put(uri, :scheme, nil))
 
@@ -47,7 +41,7 @@ defmodule SignalWire.RequestValidator do
     url |> URI.parse() |> Map.put(:port, nil) |> URI.to_string()
   end
 
-  defp data_for(url, params) do 
+  def data_for(url, params) do 
     params
     |> Map.keys()
     |> Enum.sort()
@@ -69,18 +63,11 @@ defmodule SignalWire.RequestValidator do
   end
 
   # Implementation taken from Plug.Crypto
-  # https://github.com/elixir-plug/plug/blob/master/lib/plug/crypto.ex
+  # https://github.com/elixir-plug/plug_crypto/blob/v2.0.0/lib/plug/crypto.ex
   #
   # Compares the two binaries in constant-time to avoid timing attacks.
   # See: http://codahale.com/a-lesson-in-timing-attacks/
   defp secure_compare(left, right)  when is_binary(left) and is_binary(right) do
-    byte_size(left) == byte_size(right) and secure_compare(left, right, 0)
+    byte_size(left) == byte_size(right) and :crypto.hash_equals(left, right)
   end
-
-  defp secure_compare(<<x, left::binary>>, <<y, right::binary>>, acc) do
-    xorred = bxor(x, y)
-    secure_compare(left, right, acc ||| xorred)
-  end
-
-  defp secure_compare(<<>>, <<>>, acc), do: acc === 0
 end

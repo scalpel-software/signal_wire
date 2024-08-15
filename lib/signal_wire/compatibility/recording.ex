@@ -67,6 +67,7 @@ defmodule SignalWire.Recording do
   @spec create(Tesla.Client.t(), binary, binary, map) :: SignalWire.success() | SignalWire.error()
   def create(client, account_id, call_sid, params) do 
     case Tesla.post!(client, create_url(account_id, call_sid), params) do 
+      %Tesla.Env{body: body, status: 200} -> {:ok, as_struct(__MODULE__, body)}
       %Tesla.Env{body: body, status: 201} -> {:ok, as_struct(__MODULE__, body)}
       response -> {:error, response}
     end
