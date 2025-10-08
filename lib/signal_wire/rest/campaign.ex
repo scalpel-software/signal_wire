@@ -50,7 +50,7 @@ defmodule SignalWire.Campaign do
       %Tesla.Env{body: %{"data" => data, "links" => links}, status: 200} -> 
         {:ok, as_struct(__MODULE__, data), rest_paging(links)}
 
-      response -> 
+      response ->
         {:error, response}
     end
   end

@@ -26,13 +26,13 @@ defmodule SignalWire.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tesla, "~> 1.12"},
+      {:tesla, "~> 1.15"},
       {:jason, "~> 1.4"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.38.0", only: :dev, runtime: false}
     ]
   end
 
-  defp package do 
+  defp package do
     [
       description: "An unofficial Signal Wire API library for elixir",
       maintainers: ["tomciopp"],
@@ -43,7 +43,7 @@ defmodule SignalWire.MixProject do
     ]
   end
 
-  defp docs do 
+  defp docs do
     [
       extras: [
         "LICENSE.md": [title: "License"],
